@@ -1,0 +1,55 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Accounts</div>
+        <div class="card-body">
+          <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccount()">
+            <div class="input-group">
+            <label class="input-group-text">Account ID :</label>
+            <input type="text" formControlName="accountId" class="form-control">
+            <button class="btn btn-success">
+              <i class="bi bi-search"></i>
+              Search
+            </button>
+            </div>
+          </form>
+          <ng-container *ngIf="accountObservable | async as accountInfo">
+            <div class="mt-2 mb-2">
+              <label>Account ID : </label>
+              <label><strong>{{accountInfo.id}}</strong></label>
+            </div>
+            <div class="mb-2">
+              <label>Account balance : </label>
+              <label><strong>{{accountInfo.balance | number : '1.2-2'}}</strong></label>
+            </div>
+            <table class="table">
+              <thead>
+              <tr>
+                <th>ID</th><th>DATE</th><th>TYPE</th><th class="text-end">AMOUNT</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let op of accountInfo.accountOperations">
+                <td>{{op.id}}</td>
+                <td>{{op.operationDate | date : 'dd-MM-yyyy'}}</td>
+                <td>{{op.type}}</td>
+                <td class="text-end">{{op.amount | number : '1.2-2'}}</td>
+              </tr>
+              </tbody>
+            </table>
+            <ul class="nav nav-pills">
+              <li *ngFor="let item of [].constructor(accountInfo.totalePages); let page= index">
+                <a [ngClass]="page==currentPage?'btn-info':'btn-outline-info'" (click)="goToPage(page)" class="btn ms-1 mt-1">{{page}}</a>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+
+    </div>
+  </div>
+
+</div>
