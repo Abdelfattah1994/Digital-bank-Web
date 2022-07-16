@@ -14,3 +14,9 @@ export interface AccountOperation {
   amount:        number;
   type:          string;
 }
+
+export interface Debit {
+  accountId: string;
+  amount: number;
+  description: string;
+}

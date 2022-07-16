@@ -14,7 +14,12 @@
             </button>
             </div>
           </form>
-          <ng-container *ngIf="accountObservable | async as accountInfo">
+          <ng-template #errorTemplate>
+            <ng-container *ngIf="errorMessage">
+              <div class="text-danger mt-2">{{errorMessage}}</div>
+            </ng-container>
+          </ng-template>
+          <ng-container *ngIf="accountObservable | async as accountInfo; else errorTemplate">
             <div class="mt-2 mb-2">
               <label>Account ID : </label>
               <label><strong>{{accountInfo.id}}</strong></label>
@@ -32,7 +37,7 @@
               <tbody>
               <tr *ngFor="let op of accountInfo.accountOperations">
                 <td>{{op.id}}</td>
-                <td>{{op.operationDate | date : 'dd-MM-yyyy'}}</td>
+                <td>{{op.operationDate | date : 'dd-MM-yyyy:HH-mm-ss'}}</td>
                 <td>{{op.type}}</td>
                 <td class="text-end">{{op.amount | number : '1.2-2'}}</td>
               </tr>
@@ -48,7 +53,40 @@
       </div>
     </div>
     <div class="col">
-
+      <div class="card" *ngIf="accountObservable">
+        <div class="card-header">Operations :</div>
+        <div class="card-body">
+          <form [formGroup]="operationsFormGroup" (ngSubmit)="handleSaveOperation()" method="post">
+            <div class="form-check-inline ms-2">
+              <input class="form-check-input " type="radio" formControlName="operationType" value="DEBIT">
+              <label class="form-check-label ms-2">DEBIT</label>
+            </div>
+            <div class="form-check-inline ms-2">
+              <input class="form-check-input" type="radio" value="CREDIT" formControlName="operationType">
+              <label class="form-check-label ms-2">CREDIT</label>
+            </div>
+            <div class="form-check-inline ms-2">
+              <input class="form-check-input" type="radio" formControlName="operationType" value="TRANSFER">
+              <label class="form-check-label ms-2">TRANSFER</label>
+            </div>
+            <div class="mt-2" *ngIf="operationsFormGroup.value.operationType=='TRANSFER'">
+              <label class="form-label">Destination account :</label>
+              <input type="text" class="form-control" formControlName="destinationAccount">
+            </div>
+            <div>
+              <label class="form-label mt-2">Amount :</label>
+              <input class="form-control" type="text" formControlName="amount">
+            </div>
+            <div>
+              <label class="form-label mt-2">Description :</label>
+              <input class="form-control" type="text" formControlName="description">
+            </div>
+            <div class="d-grid mt-2">
+              <button class="btn btn-success">Save operation</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 
